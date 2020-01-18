@@ -1,0 +1,22 @@
+{
+	"env": [
+		{
+			"name": "REQUIRED",
+			"required": true
+		},
+		{
+			"name": "DEFAULT",
+			"default": "default value"
+		},
+		{
+			"name": "PATTERN",
+			"default": "true",
+			"pattern": "(true)|(false)"
+		},
+		{
+			"name": "CREDENTIAL",
+			"default": "secret password",
+			"mask": "hide"
+		}
+	]
+}
