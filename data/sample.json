@@ -1,0 +1,58 @@
+{
+  "env": [
+    {
+      "$comment": "This entity declare the environment variable what the application needs",
+      "name":  "TEST",
+      "default": "default value",
+      "required": true,
+      "pattern": "",
+      "mask": "auto"
+    }
+  ],
+  "file": [
+    {
+      "$comment": "This entity declare the config file to be injected from outside of container",
+      "name": "test.txt",
+      "moveTo": "/opt/config",
+      "required": false,
+      "default": "/opt/config/config.json",
+      "rewrite": [
+        {
+          "pattern": "$VERSION",
+          "replace": "${APP_MODE}"
+        }
+      ]
+    }
+  ],
+  "dependsOn": [
+    {
+      "url": "http://microservice",
+      "header": ["Authorization: Bearer 12345"],
+      "timeout": 3.0,
+      "interval": 1.0
+    }
+  ],
+  "stdout": {
+    "$comment": "Setting for stdout. If the application uses zerolog (JSON log), Set structured true",
+    "defaultLevel": "info",
+    "structured": true,
+    "exportConfig": "",
+    "exportHost": "",
+    "passThrough": true,
+    "mask": ["mask"],
+    "tags": {"tag-key": "tag-value"}
+  },
+  "stderr": {
+    "$comment": "Setting for stdout. zerolog, Set structured true",
+    "defaultLevel": "error",
+    "structured": true,
+    "exportConfig": "",
+    "exportHost": "",
+    "passThrough": true,
+    "mask": ["mask"],
+    "tags": {"tag-key": "tag-value"}
+  },
+  "logLevel": "info",
+  "version": "1.0.0",
+  "author": "{{.UserName}}"
+}

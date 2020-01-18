@@ -2,7 +2,7 @@
 Env :: {
   name:      string                    // name like "APP_MODE"
   default?:  string                    // default value
-  required?: bool                      // is this environment variable required? (default: false)
+  required:  *false | true             // is this environment variable required? (default: false)
   pattern?:  string                    // regexp pattern of the value
   mask:      *"auto" | "hide" | "show" // it contains any secret value like credential.
                                        // "auto" hides value if key name contains "PASSWORD", "SECRET", "CREDENTIAL".
@@ -75,7 +75,7 @@ dependsOn?:     [...DependsOn] | DependsOn
 stdout:         Log
 stderr:         Log
 logLevel:       "trace" | "debug" | *"info" | "warn" | "error"
-process:        Process
+// process:        Process
 // healthCheck?:   HealthCheck
 
 // version number. you can specify via envvar(${ENVVAR}), other file(@filename)

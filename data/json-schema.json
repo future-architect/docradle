@@ -1,0 +1,344 @@
+{
+  "definitions": {
+    "$comment": {
+      "$id": "#/properties/env/items/properties/$comment",
+      "type": "string",
+      "title": "The $comment Schema"
+    },
+    "logger": {
+      "$id": "#/properties/stdout",
+      "type": "object",
+      "title": "The Stdout Schema",
+      "required": [],
+      "properties": {
+        "$comment": { "$ref": "#/definitions/$comment" },
+        "defaultLevel": {
+          "$id": "#/properties/stdout/properties/defaultLevel",
+          "type": "string",
+          "title": "The DefaultLevel Schema",
+          "enum": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error"
+          ],
+          "default": "info"
+        },
+        "structured": {
+          "$id": "#/properties/stdout/properties/structured",
+          "type": "boolean",
+          "title": "The Structured Schema",
+          "default": true
+        },
+        "exportConfig": {
+          "$comment":  "Setting for log transportation",
+          "$id": "#/properties/stdout/properties/exportConfig",
+          "type": "string",
+          "title": "The ExportConfig Schema",
+          "default": "",
+          "examples": [
+            "fluentd://my-app.staging",
+            "kafka://my-app"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "exportHost": {
+          "$comment":  "Host name of exportConfig",
+          "$id": "#/properties/stdout/properties/exportHost",
+          "type": "string",
+          "title": "The ExportHost Schema",
+          "default": "",
+          "examples": [
+            "tcp://localhost:24224/prod"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "passThrough": {
+          "$id": "#/properties/stdout/properties/passThrough",
+          "type": "boolean",
+          "title": "The Passthrough Schema",
+          "default": true
+        },
+        "mask": {
+          "$id": "#/properties/stdout/properties/mask",
+          "type": "array",
+          "title": "The Mask Schema",
+          "items": {
+            "$id": "#/properties/stdout/properties/mask/items",
+            "type": "string",
+            "title": "The Items Schema",
+            "pattern": "^(.+)$"
+          }
+        },
+        "tags": {
+          "$id": "#/properties/stdout/properties/tags",
+          "type": "object",
+          "title": "The Tags Schema",
+          "additionalProperties": {"type": "string"}
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/future-architect/docradle/master/data/json-schema.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [],
+  "properties": {
+    "env": {
+      "$id": "#/properties/env",
+      "type": "array",
+      "title": "The Env Schema",
+      "items": {
+        "$comment": "This entity declare the environment variable what the application needs",
+        "$id": "#/properties/env/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "$comment": { "$ref": "#/definitions/$comment" },
+          "name": {
+            "$id": "#/properties/env/items/properties/name",
+            "type": "string",
+            "title": "The Name Schema",
+            "default": "",
+            "examples": [
+              "TEST"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "default": {
+            "$id": "#/properties/env/items/properties/default",
+            "type": "string",
+            "title": "The Default Schema",
+            "default": "",
+            "examples": [
+              "default value"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "required": {
+            "$comment": "Specify this env var is required or not",
+            "$id": "#/properties/env/items/properties/required",
+            "type": "boolean",
+            "Title": "The Required Schema",
+            "default": false,
+            "examples": [
+              true
+            ]
+          },
+          "pattern": {
+            "$comment": "Specify pattern to match env var value",
+            "$id": "#/properties/env/items/properties/pattern",
+            "type": "string",
+            "title": "Thsi is pattern",
+            "default": "",
+            "examples": [
+              "^https?://(.*)"
+            ]
+          },
+          "mask": {
+            "$comment": "Specify this env var contains sensitive data",
+            "$id": "#/properties/env/items/properties/mask",
+            "type": "string",
+            "title": "The Mask Schema",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "hide",
+              "dhow"
+            ]
+          }
+        }
+      }
+    },
+    "file": {
+      "$comment": "This entity declare the config file to be injected from outside of container",
+      "$id": "#/properties/file",
+      "type": "array",
+      "title": "The File Schema",
+      "items": {
+        "$id": "#/properties/file/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "$comment": { "$ref": "#/definitions/$comment" },
+          "name": {
+            "$id": "#/properties/file/items/properties/name",
+            "type": "string",
+            "title": "The Name Schema",
+            "default": "",
+            "examples": [
+              "test.txt"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "moveTo": {
+            "$id": "#/properties/file/items/properties/moveTo",
+            "type": "string",
+            "title": "The Moveto Schema",
+            "default": "",
+            "examples": [
+              "/opt/config"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "required": {
+            "$id": "#/properties/file/items/properties/required",
+            "type": "boolean",
+            "title": "The Required Schema",
+            "default": false,
+            "examples": [
+              false
+            ]
+          },
+          "default": {
+            "$id": "#/properties/file/items/properties/default",
+            "type": "string",
+            "title": "The Default Schema",
+            "default": "",
+            "examples": [
+              "/opt/config/config.json"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "rewrite": {
+            "$id": "#/properties/file/items/properties/rewrite",
+            "type": "array",
+            "title": "The Rewrite Schema",
+            "items": {
+              "$id": "#/properties/file/items/properties/rewrite/items",
+              "type": "object",
+              "title": "The Items Schema",
+              "required": [
+                "pattern",
+                "replace"
+              ],
+              "properties": {
+                "pattern": {
+                  "$id": "#/properties/file/items/properties/rewrite/items/properties/pattern",
+                  "type": "string",
+                  "title": "The Pattern Schema",
+                  "default": "",
+                  "examples": [
+                    "$VERSION"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "replace": {
+                  "$id": "#/properties/file/items/properties/rewrite/items/properties/replace",
+                  "type": "string",
+                  "title": "The Replace Schema",
+                  "default": "",
+                  "examples": [
+                    "${APP_MODE}"
+                  ],
+                  "pattern": "^(.*)$"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependsOn": {
+      "$id": "#/properties/dependsOn",
+      "type": "array",
+      "title": "The Depends-on Schema",
+      "items": {
+        "$id": "#/properties/dependsOn/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "$id": "#/properties/dependsOn/items/properties/url",
+            "type": "string",
+            "title": "The Url Schema",
+            "default": "",
+            "examples": [
+              "http://microservice"
+            ],
+            "pattern":  "^((file)|(https?)|(tcp[46]?)|(unix))://[a-z][\\w]*(:\\d+)?"
+          },
+          "header": {
+            "$id": "#/properties/dependsOn/items/properties/header",
+            "type": "array",
+            "title": "The Header Schema",
+            "items": {
+              "$id": "#/properties/dependsOn/items/properties/header/items",
+              "type": "string",
+              "title": "The Items Schema",
+              "default": "",
+              "examples": [
+                "Authorization: Bearer 12345"
+              ],
+              "pattern": "^(.*)$"
+            }
+          },
+          "timeout": {
+            "$id": "#/properties/dependsOn/items/properties/timeout",
+            "type": "integer",
+            "title": "The Timeout Schema",
+            "default": 10,
+            "examples": [
+              3
+            ]
+          },
+          "interval": {
+            "$id": "#/properties/dependsOn/items/properties/interval",
+            "type": "integer",
+            "title": "The Interval Schema",
+            "default": 1,
+            "examples": [
+              1
+            ]
+          }
+        }
+      }
+    },
+    "stdout": { "$ref": "#/definitions/logger" },
+    "stderr": { "$ref": "#/definitions/logger" },
+    "logLevel": {
+      "$id": "#/properties/logLevel",
+      "type": "string",
+      "title": "The Loglevel Schema",
+      "enum": [
+        "trace",
+        "debug",
+        "info",
+        "warn",
+        "error"
+      ],
+      "default": "info"
+    },
+    "version": {
+      "$id": "#/properties/version",
+      "type": "string",
+      "title": "The Version Schema",
+      "default": "",
+      "examples": [
+        "1.0.0"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "author": {
+      "$id": "#/properties/author",
+      "type": "string",
+      "title": "The Author Schema",
+      "default": "",
+      "examples": [
+        "{{.UserName}}"
+      ],
+      "pattern": "^(.*)$"
+    }
+  }
+}
