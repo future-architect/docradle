@@ -1,4 +1,6 @@
 {
+  "$schema": "https://raw.githubusercontent.com/future-architect/docradle/master/data/json-schema.json",
+  "$comment": "Sample JSON config for docradle",
   "env": [
     {
       "$comment": "This entity declare the environment variable what the application needs",
@@ -26,6 +28,7 @@
   ],
   "dependsOn": [
     {
+      "$comment": "This entity declares other container. docradle waits until this item is available.",
       "url": "http://microservice",
       "header": ["Authorization: Bearer 12345"],
       "timeout": 3.0,
@@ -43,7 +46,7 @@
     "tags": {"tag-key": "tag-value"}
   },
   "stderr": {
-    "$comment": "Setting for stdout. zerolog, Set structured true",
+    "$comment": "Setting for stderr. If the application uses zerolog (JSON log), Set structured true",
     "defaultLevel": "error",
     "structured": true,
     "exportConfig": "",

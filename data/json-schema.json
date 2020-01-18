@@ -1,17 +1,11 @@
 {
   "definitions": {
-    "$comment": {
-      "$id": "#/properties/env/items/properties/$comment",
-      "type": "string",
-      "title": "The $comment Schema"
-    },
     "logger": {
       "$id": "#/properties/stdout",
       "type": "object",
       "title": "The Stdout Schema",
       "required": [],
       "properties": {
-        "$comment": { "$ref": "#/definitions/$comment" },
         "defaultLevel": {
           "$id": "#/properties/stdout/properties/defaultLevel",
           "type": "string",
@@ -32,7 +26,6 @@
           "default": true
         },
         "exportConfig": {
-          "$comment":  "Setting for log transportation",
           "$id": "#/properties/stdout/properties/exportConfig",
           "type": "string",
           "title": "The ExportConfig Schema",
@@ -44,7 +37,6 @@
           "pattern": "^(.*)$"
         },
         "exportHost": {
-          "$comment":  "Host name of exportConfig",
           "$id": "#/properties/stdout/properties/exportHost",
           "type": "string",
           "title": "The ExportHost Schema",
@@ -99,7 +91,6 @@
           "name"
         ],
         "properties": {
-          "$comment": { "$ref": "#/definitions/$comment" },
           "name": {
             "$id": "#/properties/env/items/properties/name",
             "type": "string",
@@ -121,7 +112,7 @@
             "pattern": "^(.*)$"
           },
           "required": {
-            "$comment": "Specify this env var is required or not",
+            "$comment": "If it is true and this key is not defined, docradle shows error",
             "$id": "#/properties/env/items/properties/required",
             "type": "boolean",
             "Title": "The Required Schema",
@@ -168,7 +159,6 @@
           "name"
         ],
         "properties": {
-          "$comment": { "$ref": "#/definitions/$comment" },
           "name": {
             "$id": "#/properties/file/items/properties/name",
             "type": "string",
@@ -286,7 +276,7 @@
           },
           "timeout": {
             "$id": "#/properties/dependsOn/items/properties/timeout",
-            "type": "integer",
+            "type": "number",
             "title": "The Timeout Schema",
             "default": 10,
             "examples": [
@@ -295,7 +285,7 @@
           },
           "interval": {
             "$id": "#/properties/dependsOn/items/properties/interval",
-            "type": "integer",
+            "type": "number",
             "title": "The Interval Schema",
             "default": 1,
             "examples": [
