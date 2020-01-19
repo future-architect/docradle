@@ -23,5 +23,3 @@ require (
 )
 
 replace github.com/future-architect/docradle => ./
-
-replace github.com/future-architect/fluentdpub => ../fluentdpub

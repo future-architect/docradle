@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/future-architect/docradle"
@@ -17,7 +16,7 @@ var (
 	command     = runCommand.Arg("command", "Command name to run").Required().String()
 	args        = runCommand.Arg("args", "Arguments").Strings()
 	initCommand = kingpin.Command("init", "Generate config file")
-	format      = initCommand.Flag("format", "Config file format").Short('f').Default("cue").Enum("cue", ".json", "yaml")
+	format      = initCommand.Flag("format", "Config file format").Short('f').Default("json").Enum("cue", "json", "yaml")
 )
 
 func main() {
@@ -42,6 +41,10 @@ func main() {
 			}
 		}
 	case initCommand.FullCommand():
-		log.Println("init")
+		err := docradle.Generate(os.Stdout, *format)
+		if err != nil {
+			color.Fprintf(os.Stderr, "<red>%s</>\n", err.Error())
+			os.Exit(1)
+		}
 	}
 }
