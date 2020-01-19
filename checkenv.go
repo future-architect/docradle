@@ -104,6 +104,8 @@ func mask(name, config string) bool {
 		"CREDENTIAL",
 		"PASSWORD",
 		"SECRET",
+		"_TOKEN",
+		"_KEY",
 	}
 	name = strings.ToUpper(name)
 	for _, word := range words {

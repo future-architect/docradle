@@ -79,8 +79,8 @@ github.com/fluent/fluent-logger-golang v1.4.0/go.mod h1:2/HCT/jTy78yGyeNGQLGQsjF
 github.com/fortytw2/leaktest v1.2.0/go.mod h1:jDsjWgpAGjm2CA7WthBh/CdZYEPF31XHquHwclZch5g=
 github.com/fortytw2/leaktest v1.3.0/go.mod h1:jDsjWgpAGjm2CA7WthBh/CdZYEPF31XHquHwclZch5g=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
-github.com/future-architect/fluentdpub v0.0.3 h1:y1+PqupB8Bgymn7Iv3m3b7lcQlk4OxqhEJTfPP04mkE=
-github.com/future-architect/fluentdpub v0.0.3/go.mod h1:UgfeR5ZBbowVDOF0Sq90ihymfYtGgDhf3kTHhCAJI5U=
+github.com/future-architect/fluentdpub v0.0.4 h1:ul5Me3fayoaQWPvYtN/ekJf4RpKlRvs2Z/4aWdao8jc=
+github.com/future-architect/fluentdpub v0.0.4/go.mod h1:UgfeR5ZBbowVDOF0Sq90ihymfYtGgDhf3kTHhCAJI5U=
 github.com/gabriel-vasile/mimetype v1.0.2 h1:GKCo1TUCg0pV0R4atTcaLv/9SI2W9xPgMySZxUxcJOE=
 github.com/gabriel-vasile/mimetype v1.0.2/go.mod h1:6CDPel/o/3/s4+bp6kIbsWATq8pmgOisOPG40CJa6To=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
