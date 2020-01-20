@@ -101,6 +101,20 @@ func Test_ReadConfig(t *testing.T) {
 				assert.Error(t, err)
 			},
 		},
+		{
+			name: "check default value",
+			args: args{
+				filePath: "config.json",
+				content: `{
+					}
+				`,
+			},
+			check: func(t *testing.T, config *Config, err error) {
+				assert.NoError(t, err)
+				assert.Equal(t, "info", config.Stdout.DefaultLevel)
+				assert.Equal(t, "error", config.Stderr.DefaultLevel)
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

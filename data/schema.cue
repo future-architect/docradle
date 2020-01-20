@@ -56,7 +56,7 @@ Process :: {
 
 // Logging config
 Log :: {
-  defaultLevel:  "trace" | "debug" | *"info" | "warn" | "error"
+  defaultLevel:  string
   structured:    *true | false
   exportConfig?: string
   exportHost?:   string
@@ -75,6 +75,8 @@ dependsOn?:     [...DependsOn] | DependsOn
 stdout:         Log
 stderr:         Log
 logLevel:       "trace" | "debug" | *"info" | "warn" | "error"
+stdout: defaultLevel: "trace" | "debug" | *"info" | "warn" | "error"
+stderr: defaultLevel: "trace" | "debug" | "info" | "warn" | *"error"
 // process:        Process
 // healthCheck?:   HealthCheck
 
