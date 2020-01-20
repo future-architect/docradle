@@ -52,6 +52,7 @@ type Logger struct {
 	defaultLevel zerolog.Level
 	logLevel     zerolog.Level
 	tags         map[string]string
+	maskKeys     []string
 	structured   bool
 	writer       *io.PipeWriter
 }
@@ -99,6 +100,7 @@ func NewLogger(ctx context.Context, logType LogType, writer io.Writer, logLevelL
 		transporter:  transporter,
 		structured:   logConfig.Structured,
 		tags:         logConfig.Tags,
+		maskKeys:     logConfig.Mask,
 	}
 
 	if logConfig.PassThrough {
@@ -175,6 +177,11 @@ func (l *Logger) WriteMap(log map[string]interface{}) {
 			}
 		}
 		delete(log, LogLevelKey)
+	}
+	for _, maskKey := range l.maskKeys {
+		if _, ok := log[maskKey]; ok {
+			log[maskKey] = "********"
+		}
 	}
 	if l.console != nil {
 		event := l.console.WithLevel(logLevel)

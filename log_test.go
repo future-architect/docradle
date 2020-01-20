@@ -65,6 +65,23 @@ func TestLog_StructuredConsole(t *testing.T) {
 		buffer.String())
 }
 
+func TestLog_StructuredConsoleWithMask(t *testing.T) {
+	var buffer bytes.Buffer
+	logger, err := NewLogger(context.Background(), StdOut, &buffer, "info", LogConfig{
+		Structured:   true,
+		DefaultLevel: "info",
+		PassThrough:  true,
+		Mask:         []string{"password"},
+	}, NewEnvVar())
+	assert.NoError(t, err)
+
+	// level field overwrite default logLevel
+	logger.Write(`{"level": "error", "user": "shibukawa", "password": "should not show this"}`)
+	assert.Equal(t,
+		`{"level":"error","password":"********","user":"shibukawa","time":1579946400}`+"\n",
+		buffer.String())
+}
+
 func TestLog_StructuredTransport(t *testing.T) {
 	var buffer bytes.Buffer
 	ctx, cancel := context.WithCancel(context.Background())
