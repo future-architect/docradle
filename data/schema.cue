@@ -1,5 +1,6 @@
 // Environment variable declaration
 Env :: {
+  $comment?: string
   name:      string                    // name like "APP_MODE"
   default?:  string                    // default value
   required:  *false | true             // is this environment variable required? (default: false)
@@ -12,12 +13,14 @@ Env :: {
 // It is useful for modifying frontend code by using envvars
 // you can use regexp and envvars.
 Rewrite :: {
+  $comment?: string
   pattern: string // rewrite target eg: "<body.*>"
   replace: string // rewrite pattern eg: "<script>const mode=${APP_MODE}"</script>$1"
 }
 
 // Config file injection declaration for docker volume flags
 File :: {
+  $comment?: string
   name:      string                 // file name matching pattern
   moveTo?:   string                 // move the file to other location
   required?: bool                   // is this file required? (default: false)
@@ -25,10 +28,11 @@ File :: {
   rewrite?:  [...Rewrite] | Rewrite // file rewrite patterns
 }
 
-HTTPHeader :: *"" | =~ "^[a-zA-Z-]+:"
+HTTPHeader :: =~ "^[a-zA-Z-]+:"
 
 // Wait for other services before launching command
 DependsOn :: {
+  $comment?: string
   // url should starts with tcp://, udp://, http://, https://
   url:      =~ "^((file)|(https?)|(tcp[46]?)|(unix))://[a-z][\\w]*(:\\d+)?"
   headers:  [...HTTPHeader]         // header when access to http server
@@ -40,6 +44,7 @@ DependsOn :: {
 
 // Health checking port
 HealthCheck :: {
+  $comment?: string
   statsInterval: *3 | float64         // interval seconds of checking CPU/Memory stats
   interval:      *10 | float64        // interval seconds of updating stats
   url?:          string | [...string] // check other services
@@ -47,6 +52,7 @@ HealthCheck :: {
 
 // Process exit behavior
 Process :: {
+  $comment?: string
   noticeExitHttp?:   string // Send back notification when process closed
   noticeExitSlack?:  string // Incoming webhook URL to send exit information
   noticeExitPubSub?: string // Send back notification to pub sub
@@ -56,6 +62,7 @@ Process :: {
 
 // Logging config
 Log :: {
+  $comment?: string
   defaultLevel:  string
   structured:    *true | false
   exportConfig?: string
@@ -65,6 +72,7 @@ Log :: {
   tags?:         [string]: string
 }
 
+$comment?:      string
 // dashboard web service port
 // dashboardPort?: uint16
 // debugger     port for go

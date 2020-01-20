@@ -1,6 +1,7 @@
 package docradle
 
 import (
+	"io"
 	"strings"
 	"testing"
 
@@ -115,10 +116,26 @@ func Test_ReadConfig(t *testing.T) {
 				assert.Equal(t, "error", config.Stderr.DefaultLevel)
 			},
 		},
+		{
+			name: "It can use default value if config file does not exist",
+			args: args{
+				filePath: "",
+				content:  "",
+			},
+			check: func(t *testing.T, config *Config, err error) {
+				assert.NoError(t, err)
+				assert.Equal(t, "info", config.Stdout.DefaultLevel)
+				assert.Equal(t, "error", config.Stderr.DefaultLevel)
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config, err := ReadConfig(tt.args.filePath, strings.NewReader(tt.args.content))
+			var reader io.Reader
+			if tt.args.content != "" {
+				reader = strings.NewReader(tt.args.content)
+			}
+			config, err := ReadConfig(tt.args.filePath, reader)
 			tt.check(t, config, err)
 		})
 	}

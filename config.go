@@ -23,6 +23,7 @@ import (
 func ReadConfig(filePath string, reader io.Reader) (*Config, error) {
 	var r cue.Runtime
 
+	// schema.cue is inside program. It should not fail
 	e, err := brbundle.Find("schema.cue")
 	if err != nil {
 		panic(err)
@@ -36,29 +37,35 @@ func ReadConfig(filePath string, reader io.Reader) (*Config, error) {
 		panic(err)
 	}
 
-	var valueInstance *cue.Instance
-	switch filepath.Ext(filePath) {
-	case ".cue":
-		valueInstance, err = r.Compile(filePath, reader)
-		if err != nil {
-			return nil, fmt.Errorf("Parse CUE file error: %w", err)
-		}
-	case ".json":
-		decoder := json.NewDecoder(&r, filePath, reader)
-		valueInstance, err = decoder.Decode()
-		if err != nil {
-			return nil, fmt.Errorf("Parse JSON file error: %w", err)
-		}
-	case ".yaml":
-		fallthrough
-	case ".yml":
-		valueInstance, err = yaml.Decode(&r, filePath, reader)
-		if err != nil {
-			return nil, fmt.Errorf("Parse YAML file error: %w", err)
-		}
-	}
+	var merged *cue.Instance
 
-	merged := cue.Merge(schemaInstance, valueInstance)
+	if reader != nil {
+		var valueInstance *cue.Instance
+		switch filepath.Ext(filePath) {
+		case ".cue":
+			valueInstance, err = r.Compile(filePath, reader)
+			if err != nil {
+				return nil, fmt.Errorf("Parse CUE file error: %w", err)
+			}
+		case ".json":
+			decoder := json.NewDecoder(&r, filePath, reader)
+			valueInstance, err = decoder.Decode()
+			if err != nil {
+				return nil, fmt.Errorf("Parse JSON file error: %w", err)
+			}
+		case ".yaml":
+			fallthrough
+		case ".yml":
+			valueInstance, err = yaml.Decode(&r, filePath, reader)
+			if err != nil {
+				return nil, fmt.Errorf("Parse YAML file error: %w", err)
+			}
+		}
+		merged = cue.Merge(schemaInstance, valueInstance)
+	} else {
+		// use default value
+		merged = schemaInstance
+	}
 	err = merged.Value().Validate()
 	if err != nil {
 		return nil, fmt.Errorf("validation error: %w", err)
@@ -116,18 +123,27 @@ func ParseAndVerifyConfig(workingDir string, stdout, stderr io.Writer, configFla
 		color.Fprintf(stderr, "<red>there are many candidates to read as config:\n    %s</>\n", strings.Join(files, "\n    "))
 		return nil, nil, fmt.Errorf("too many config file candidate to read: %s", strings.Join(files, ", "))
 	}
-	configFile, err := os.Open(files[0])
-	if err != nil {
-		color.Fprintf(stderr, "<red>can't read config file '%s': %v\n</>\n", files[0], err)
-		return nil, nil, err
-	}
+	var config *Config
 	color.Fprintln(stdout, "<bg=black;fg=lightBlue;op=reverse;>  Config File  </>\n")
-	color.Fprintf(stdout, "<yellow>%s</> \n    ⇐ <magenta>%s</>\n", files[0], configFlag)
-	config, err := ReadConfig(files[0], configFile)
-	if err != nil {
-		color.Fprintf(stderr, "\n<red>Cannot read config file:</>\n")
-		color.Fprintf(stderr, "  <red>%s</>\n", err.Error())
-		return nil, nil, err
+	if len(files) > 0 {
+		configFile, err := os.Open(files[0])
+		if err != nil {
+			color.Fprintf(stderr, "<red>can't read config file '%s': %v\n</>\n", files[0], err)
+			return nil, nil, err
+		}
+		color.Fprintf(stdout, "<yellow>%s</> \n    ⇐ <magenta>%s</>\n", files[0], configFlag)
+		config, err = ReadConfig(files[0], configFile)
+		if err != nil {
+			color.Fprintf(stderr, "\n<red>Cannot read config file:</>\n")
+			color.Fprintf(stderr, "  <red>%s</>\n", err.Error())
+			return nil, nil, err
+		}
+	} else {
+		color.Fprintf(stdout, "<yellow>warning:</> Can't find any config files. Use default value.\n    ⇐ <magenta>%s</>\n", configFlag)
+		config, err = ReadConfig("default", nil)
+		if err != nil {
+			panic(err)
+		}
 	}
 	outputs := make(map[string]LogOutputs)
 	checkEnvResults, envvars := CheckEnv(config, os.Environ(), nil, true)

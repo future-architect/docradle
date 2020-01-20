@@ -11,7 +11,7 @@ import (
 
 var (
 	runCommand  = kingpin.Command("run", "Execute commands")
-	configFlag  = runCommand.Flag("config", "Config filename").Default(`gocradle.cue,gocradle.json,gocradle.yaml,gocradle.yml`).Short('c').String()
+	configFlag  = runCommand.Flag("config", "Config filename").Default(`docradle.cue,docradle.json,docradle.yaml,docradle.yml`).Short('c').String()
 	dryRunFlag  = runCommand.Flag("dryrun", "Check EnvVar/Files only").Short('d').Bool()
 	command     = runCommand.Arg("command", "Command name to run").Required().String()
 	args        = runCommand.Arg("args", "Arguments").Strings()

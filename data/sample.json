@@ -30,7 +30,7 @@
     {
       "$comment": "This entity declares other container. docradle waits until this item is available.",
       "url": "http://microservice",
-      "header": ["Authorization: Bearer 12345"],
+      "headers": ["Authorization: Bearer 12345"],
       "timeout": 3.0,
       "interval": 1.0
     }
