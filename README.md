@@ -56,16 +56,16 @@ Declare environment variables what your application use.
 }
 ```
 
-* "name"(required): env-var name
-* "default"(optional): Default value if this env-var is not passed.
-* "required"(optional): If this value is true and this env-var is not passed, docradle shows error and stop running. Default value is `false`.
-* "pattern"(optional): Regexp pattern to check env-var value
-* "mask"(optional): Hide the value from console log. You can use "auto", "hide", "show". If `"auto"`, docradle decide the name contains the one of the following names:
-  * "CREDENTIAL"
-  * "PASSWORD"
-  * "SECRET"
-  * "_TOKEN"
-  * "_KEY" 
+* `name`(required): env-var name
+* `default`(optional): Default value if this env-var is not passed.
+* `required`(optional): If this value is true and this env-var is not passed, docradle shows error and stop running. Default value is `false`.
+* `pattern`(optional): Regexp pattern to check env-var value
+* `mask`(optional): Hide the value from console log. You can use `"auto"`, `"hide"`, `"show"`. If `"auto"`, docradle decide the name contains the one of the following names:
+  * `"CREDENTIAL"`
+  * `"PASSWORD"`
+  * `"SECRET"`
+  * `"_TOKEN"`
+  * `"_KEY"`
 
 ### Config Files
 
@@ -92,11 +92,11 @@ This feature is for these capability.
 }
 ```
 
-* "name"(required): File name. This file is search from working directory to root.
-* "moveTo"(optional): Move the matched file to this directory. It make simplify "-v" option of Docker.
-* "required"(optional): If this value is true and this file doesn't exist, docradle shows error and stop running. Default value is `false`.
-* "default"(optional): Default file if file not match. This file will be moved to "moveTo" location.
-* "rewrite"(optional): Rewriting config file content by using environment variables.
+* `name`(required): File name. This file is search from working directory to root.
+* `moveTo`(optional): Move the matched file to this directory. It make simplify `-v` option of Docker.
+* `required`(optional): If this value is true and this file doesn't exist, docradle shows error and stop running. Default value is `false`.
+* `default`(optional): Default file if file not match. This file will be moved to `moveTo` location.
+* `rewrite`(optional): Rewriting config file content by using environment variables.
 
 If you make your static web application to aware release/staging mode without rebuilding on runtime and any server APIs, you can use like this:
 
@@ -124,14 +124,14 @@ Sometimes, docker images run before its dependency. It is a feature to wait that
 }
 ```
 
-* "url"(required): The target to observe. The schema should be one of "file", "http", "https", "tcp", "tcp4", "tcp6", "unix".
-* "header": If the target is "http" or "https", This header is passed to target server.
-* "timeout": Timeout duration (second). If the target server doesn't work within this term, docradle shows error and stop running.
-* "interval": Interval to access target service.
+* `url`(required): The target to observe. The schema should be one of `file`, `http`, `https`, `tcp`, `tcp4`, `tcp6`, `unix`.
+* `header`(optional): If the target is `http` or `https`, This header is passed to target server.
+* `timeout`(optional): Timeout duration (second). If the target server doesn't work within this term, docradle shows error and stop running. Default value is 10 seconds.
+* `interval`(optional): Interval to access target service. Default value is 1 second.
 
 ### Stdout/Stderr settings
 
-Docradle is designed to work with application that shows structured log (now only support JSON) to stdout, stderr.
+Docradle is designed to work with application that shows structured log (now only support JSON) to stdout, stderr. And its output is always JSON.
 
 ```json
 {
@@ -151,14 +151,26 @@ Docradle is designed to work with application that shows structured log (now onl
 }
 ```
 
-* "defaultLevel": ""
-* "structured": ""
-* "exportConfig": ""
-* "exportHost": ""
-* "passThrough": ""
-* "mask": ""
-* "tags": ""
-* "logLevel": ""
+If application output is not JSON or `structured` option is `false`, Docradle captures it and outputs like this:
+
+```text
+# Application output
+hello
+
+# docradle output
+{"level": "info", "message": "hello", time":1579946400}
+```
+
+* `stdout/stderr.defaultLevel`(optional): If log level(level key in output JSON) is not included in output, This output level is used. Default value for stdout is `"info"`, for stderr is `"error"`.
+* `stdout/stderr.structured`(optional): If it is `true`, docradle try to parse console output as JSON. Default value is `true`.
+* `stdout/stderr.exportConfig`(optional/experimental): Transfer log output to external server. It accepts the following systems:
+  * `fluentd://(tagnames)`: Fluentd
+  * `kafka://(topic)`: Kafka
+* `stdout/stderr.exportHost`(optional/experimental): It is the host name of the above systems.
+* `stdout/stderr.passThrough`(optional): If it is true, docradle dump log output to its stdout/stderr too. Default value is `true`.
+* `stdout/stderr.mask`(optional): If output JSON contains one of this key, The value would be masked.
+* `stdout/stderr.tags`(optional): This JSON contents would be added to output log.
+* `logLevel`(optional): Log filtering option. Default value is `"info"`.
 
 ## License
 
