@@ -13,6 +13,7 @@ var (
 	runCommand  = kingpin.Command("run", "Execute commands")
 	configFlag  = runCommand.Flag("config", "Config filename").Default(`docradle.cue,docradle.json,docradle.yaml,docradle.yml`).Short('c').String()
 	dryRunFlag  = runCommand.Flag("dryrun", "Check EnvVar/Files only").Short('d').Bool()
+	dotEnvFlag  = runCommand.Flag("dotenv", ".env filename").Short('e').Default(".env").String()
 	command     = runCommand.Arg("command", "Command name to run").Required().String()
 	args        = runCommand.Arg("args", "Arguments").Strings()
 	initCommand = kingpin.Command("init", "Generate config file")
@@ -28,7 +29,7 @@ func main() {
 			color.Fprintf(os.Stderr, "<red>Cannot get current folder: %v</>\n", err)
 			os.Exit(1)
 		}
-		config, envvar, err := docradle.ParseAndVerifyConfig(wd, os.Stdout, os.Stderr, *configFlag)
+		config, envvar, err := docradle.ParseAndVerifyConfig(wd, os.Stdout, os.Stderr, *configFlag, *dotEnvFlag)
 		if err != nil {
 			os.Exit(1)
 		}

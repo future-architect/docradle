@@ -180,7 +180,7 @@ func Test_CheckEnv_WithNoSpec(t *testing.T) {
 					key:      "HOME",
 					value:    "/home/user",
 					rawValue: "/home/user",
-					from:     noSpec,
+					from:     fromOsEnv,
 				},
 			},
 			wantEnvs: []string{
@@ -356,7 +356,7 @@ func Test_checkResult_String(t *testing.T) {
 				rawValue: "${HOME}/go",
 				from:     fromDefault,
 			},
-			included: "(from cradle's default)",
+			included: "(from docradle's default)",
 		},
 		{
 			name: "error",

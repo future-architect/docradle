@@ -50,7 +50,7 @@ func (c EnvCheckResult) Error() error {
 func (c EnvCheckResult) String() string {
 	var builder strings.Builder
 	builder.WriteString("  ")
-	if c.from == noSpec {
+	if c.from == fromOsEnv || c.from == fromDotEnv {
 		builder.WriteString("<bg=black;fg=blue;op=reverse;>--</> ")
 	} else if c.Error() == nil {
 		builder.WriteString("<bg=black;fg=green;op=reverse;>OK</> ")
@@ -81,7 +81,7 @@ func (c EnvCheckResult) String() string {
 	case fromDotEnv:
 		builder.WriteString(" <gray>(from .env)</>")
 	case fromDefault:
-		builder.WriteString(" <gray>(from cradle's default)</>")
+		builder.WriteString(" <gray>(from docradle's default)</>")
 	}
 	if err := c.Error(); err != nil {
 		builder.WriteString("\n      <red>... " + err.Error() + ".")
@@ -154,12 +154,12 @@ func CheckEnv(c *Config, osEnvs, dotEnvs []string, includeNoSpec bool) (results 
 			if checked[key] {
 				continue
 			}
-			rawValue, value, _, _ := envs.Get(key)
+			rawValue, value, from, _ := envs.Get(key)
 			result := EnvCheckResult{
 				key:      key,
 				rawValue: rawValue,
 				value:    value,
-				from:     noSpec,
+				from:     from,
 				mask:     mask(key, "auto"),
 			}
 			tempResult = append(tempResult, result)

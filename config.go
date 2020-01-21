@@ -16,6 +16,7 @@ import (
 	"cuelang.org/go/encoding/json"
 	"cuelang.org/go/encoding/yaml"
 	"github.com/gookit/color"
+	"github.com/joho/godotenv"
 	"go.pyspa.org/brbundle"
 )
 
@@ -38,7 +39,6 @@ func ReadConfig(filePath string, reader io.Reader) (*Config, error) {
 	}
 
 	var merged *cue.Instance
-
 	if reader != nil {
 		var valueInstance *cue.Instance
 		switch filepath.Ext(filePath) {
@@ -114,7 +114,7 @@ func ReadConfig(filePath string, reader io.Reader) (*Config, error) {
 // ParseAndVerifyConfig reads and verify configs
 //
 // It dumps config status and error message to stdout, stderr
-func ParseAndVerifyConfig(workingDir string, stdout, stderr io.Writer, configFlag string) (*Config, *EnvVar, error) {
+func ParseAndVerifyConfig(workingDir string, stdout, stderr io.Writer, configFlag, dotEnvFlag string) (*Config, *EnvVar, error) {
 	files, err := SearchFiles(configFlag, workingDir)
 	if err != nil {
 		color.Fprintf(stderr, "<red>config option pattern error %q\n</>\n", configFlag)
@@ -146,7 +146,18 @@ func ParseAndVerifyConfig(workingDir string, stdout, stderr io.Writer, configFla
 		}
 	}
 	outputs := make(map[string]LogOutputs)
-	checkEnvResults, envvars := CheckEnv(config, os.Environ(), nil, true)
+	var dotEnvs []string
+	dotEnvPath := filepath.Join(workingDir, dotEnvFlag)
+	readDot := false
+	dotEnvMap, err := godotenv.Read(dotEnvFlag)
+	if err == nil {
+		readDot = true
+		dotEnvs = make([]string, 0, len(dotEnvMap))
+		for key, value := range dotEnvMap {
+			dotEnvs = append(dotEnvs, key+"="+value)
+		}
+	}
+	checkEnvResults, envvars := CheckEnv(config, os.Environ(), dotEnvs, true)
 	outputs["env"] = DumpAndSummaryEnvResult(checkEnvResults)
 	if len(config.Files) > 0 {
 		checkFileResults := ProcessFiles(config, workingDir, envvars)
@@ -158,6 +169,9 @@ func ParseAndVerifyConfig(workingDir string, stdout, stderr io.Writer, configFla
 	}
 	showErrorOnly := outputs["env"].HasError() || outputs["file"].HasError() || outputs["dependency"].HasError()
 	color.Fprintln(stdout, "\n<bg=black;fg=lightBlue;op=reverse;>  Environment Variables  </>\n")
+	if readDot {
+		color.Fprintf(stdout, "<gray>.env file: %s</>\n\n", dotEnvPath)
+	}
 	if outputs["env"].Dump(showErrorOnly) {
 		color.Fprintln(stdout, "\n    <fg=lightGreen;op=underscore,bold;>No Error</>\n")
 	}

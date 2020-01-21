@@ -9,6 +9,7 @@ require (
 	github.com/future-architect/fluentdpub v0.0.4
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/gookit/color v1.2.1
+	github.com/joho/godotenv v1.3.0
 	github.com/mattn/go-isatty v0.0.11
 	github.com/rs/xid v1.2.1
 	github.com/rs/zerolog v1.17.2
