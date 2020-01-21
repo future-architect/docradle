@@ -1,5 +1,7 @@
 # docradle
 
+[![Actions Status](https://github.com/future-architect/docradle/workflows/{test}/badge.svg)](https://github.com/future-architect/docradle/actions)
+
 Helper tool for Docker container. This tool works as command wrapper and provides the following features:
 
 * Check environment variables (existence and value check, set default value)
