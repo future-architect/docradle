@@ -5,6 +5,7 @@
 Helper tool for Docker container. This tool works as command wrapper and provides the following features:
 
 * Check environment variables (existence and value check, set default value)
+* Read environment variables from .env file.
 * Check other depending processes
 * Transfer/modify/mask stdout/stderr logs
 
@@ -18,6 +19,8 @@ $ go get github.com/future-architect/docradle/...
 
 ## How to Use
 
+### Initialize
+
 ```sh
 $ docradle init
 
@@ -28,11 +31,19 @@ Run with the following command:
 $ docradle run your-command options...
 ```
 
-Then edit `docradle.json`. To use docradle, run like this:
+Then edit `docradle.json`. 
+
+### Execution
+
+To use docradle, run like this:
 
 ```sh
 $ docradle run <command> <args>...
 ```
+
+* "--config, -c": Config file name. Default file name is one of "docradle.json", "docradle.yaml", "docradle.yml", "docradle.cue".
+* "--dryrun, -d": Check only
+* "--dotenv, -e": .env file name to read. Default file name is ".env".
 
 ## Settings
 
