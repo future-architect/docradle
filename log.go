@@ -54,7 +54,6 @@ type Logger struct {
 	tags         map[string]string
 	maskKeys     []string
 	structured   bool
-	writer       *io.PipeWriter
 }
 
 var logLevelMap = map[string]zerolog.Level{
@@ -122,9 +121,7 @@ func NewLogger(ctx context.Context, logType LogType, writer io.Writer, logLevelL
 	return logger, nil
 }
 
-func (l *Logger) StartOutput(eg *errgroup.Group) io.Writer {
-	reader, writer := io.Pipe()
-	l.writer = writer
+func (l *Logger) StartOutput(eg *errgroup.Group, reader io.ReadCloser) {
 	eg.Go(func() error {
 		scanner := bufio.NewScanner(reader)
 		for scanner.Scan() {
@@ -132,14 +129,13 @@ func (l *Logger) StartOutput(eg *errgroup.Group) io.Writer {
 		}
 		return nil
 	})
-	return writer
 }
 
-func (l *Logger) Write(log string) {
+func (l *Logger) Write(line string) {
 	jsonMap := make(map[string]interface{})
 	parsed := false
 	if l.structured {
-		if err := json.Unmarshal([]byte(log), &jsonMap); err == nil {
+		if err := json.Unmarshal([]byte(line), &jsonMap); err == nil {
 			parsed = true
 		}
 	}
@@ -151,14 +147,14 @@ func (l *Logger) Write(log string) {
 			for key, value := range l.tags {
 				event.Str(key, value)
 			}
-			event.Msg(log)
+			event.Msg(line)
 		}
 		if l.transporter != nil && l.defaultLevel >= l.logLevel {
 			metadata := make(map[string]string, len(l.tags)+2)
 			for key, value := range l.tags {
 				metadata[key] = value
 			}
-			metadata["message"] = log
+			metadata["message"] = line
 			metadata[LogLevelKey] = l.defaultLevel.String()
 
 			l.transporter.Send(context.TODO(), &pubsub.Message{
@@ -302,7 +298,6 @@ func (l *Logger) WriteProcessResult(exitAt time.Time, status string, wallClock, 
 }
 
 func (l *Logger) Close() {
-	l.writer.Close()
 	if l.transporter != nil {
 		l.transporter.Shutdown(context.TODO())
 	}

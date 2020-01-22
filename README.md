@@ -8,6 +8,7 @@ Helper tool for Docker container. This tool works as command wrapper and provide
 * Read environment variables from .env file.
 * Check other depending processes
 * Transfer/modify/mask stdout/stderr logs
+* Report CPU/memory usage
 
 ## Install
 

@@ -57,8 +57,16 @@ func Exec(stdout, stderr io.Writer, config *Config, command string, args []strin
 
 	eg, _ := errgroup.WithContext(ctx)
 
-	cmd.Stdout = stdoutLogger.StartOutput(eg)
-	cmd.Stderr = stderrLogger.StartOutput(eg)
+	stdoutPipe, err := cmd.StdoutPipe()
+	if err != nil {
+		return err
+	}
+	stderrPipe, err := cmd.StderrPipe()
+	if err != nil {
+		return err
+	}
+	stdoutLogger.StartOutput(eg, stdoutPipe)
+	stderrLogger.StartOutput(eg, stderrPipe)
 
 	eg.Go(func() error {
 		select {
